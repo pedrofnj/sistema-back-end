@@ -44,4 +44,8 @@ public class Patrimonio {
     @JoinColumn(name = "id_status", nullable = false)
     private PatrimonioStatus patrimonioStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "id_patrimonio_setor", nullable = false)
+    private PatrimonioSetor setor;
+
 }
