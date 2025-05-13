@@ -1,19 +1,11 @@
 package com.igrejasobrenatural.sistemas.model;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.igrejasobrenatural.sistemas.enums.PatrimonioEnum;
-import com.igrejasobrenatural.sistemas.enums.PatrimonioEnumDeserializer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
 
 @Entity
 @Data
@@ -48,11 +40,8 @@ public class Patrimonio {
     @Column(name = "valor", nullable = false)
     private BigDecimal valor;
 
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "patrimonio_situacao", joinColumns = @JoinColumn(name = "patrimonio_id"))
-    @Enumerated(EnumType.STRING)
-    @JsonDeserialize(using = PatrimonioEnumDeserializer.class)
-    private Set<PatrimonioEnum> situacao = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_status", nullable = false)
+    private PatrimonioStatus patrimonioStatus;
 
 }

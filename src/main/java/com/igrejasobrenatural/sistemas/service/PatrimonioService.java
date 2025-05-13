@@ -1,46 +1,38 @@
 package com.igrejasobrenatural.sistemas.service;
 
-import com.igrejasobrenatural.sistemas.enums.PatrimonioEnum;
 import com.igrejasobrenatural.sistemas.model.Patrimonio;
+import com.igrejasobrenatural.sistemas.model.PatrimonioStatus;
 import com.igrejasobrenatural.sistemas.repository.PatrimonioRepository;
+import com.igrejasobrenatural.sistemas.repository.PatrimonioStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class PatrimonioService {
 
     final private PatrimonioRepository patrimonioRepository;
 
+    final private PatrimonioStatusRepository patrimonioStatusRepository;
+
     @Autowired
-    public PatrimonioService(PatrimonioRepository patrimonioRepository) {
+    public PatrimonioService(PatrimonioRepository patrimonioRepository, PatrimonioStatusRepository patrimonioStatusRepository) {
         this.patrimonioRepository = patrimonioRepository;
+        this.patrimonioStatusRepository = patrimonioStatusRepository;
     }
 
     public void salvar(Patrimonio patrimonio) {
         if (patrimonioRepository.findByCodigo(patrimonio.getCodigo()).isPresent()) {
             throw new RuntimeException("Patrimônio já existe");
         }
+
+        Long idStatus = patrimonio.getPatrimonioStatus().getId();
+        PatrimonioStatus status = patrimonioStatusRepository.findById(idStatus)
+                .orElseThrow(() -> new RuntimeException("Status de patrimônio não encontrado"));
+
+        patrimonio.setPatrimonioStatus(status);
+
         patrimonioRepository.save(patrimonio);
-    }
-
-    public ResponseEntity<List<Patrimonio>> byAll() {
-        List<Patrimonio> patrimonios = patrimonioRepository.findAll().stream()
-                .map(this::formatarSituacao)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(patrimonios);
-    }
-
-    private Patrimonio formatarSituacao(Patrimonio patrimonio) {
-        Set<PatrimonioEnum> situacoesFormatadas = patrimonio.getSituacao().stream()
-                .map(situacao -> PatrimonioEnum.valueOf(situacao.name()))
-                .collect(Collectors.toSet());
-        patrimonio.setSituacao(situacoesFormatadas);
-        return patrimonio;
     }
 
     public ResponseEntity<Patrimonio> byId(Long id) {
@@ -48,16 +40,16 @@ public class PatrimonioService {
     }
 
     public void alterar(Long id, Patrimonio patrimonio){
-        patrimonioRepository.findById(id).map(patrimonio1 -> {
-            patrimonio1.setCodigo(patrimonio.getCodigo());
-            patrimonio1.setNome(patrimonio.getNome());
-            patrimonio1.setDescricao(patrimonio.getDescricao());
-            patrimonio1.setDataAquisicao(patrimonio.getDataAquisicao());
-            patrimonio1.setDataCadastro(patrimonio.getDataCadastro());
-            patrimonio1.setNumeroSerie(patrimonio.getNumeroSerie());
-            patrimonio1.setValor(patrimonio.getValor());
-            patrimonio1.setSituacao(patrimonio.getSituacao());
-            return patrimonioRepository.save(patrimonio1);
+        patrimonioRepository.findById(id).map(atualizaPatrimonio -> {
+            atualizaPatrimonio.setCodigo(patrimonio.getCodigo());
+            atualizaPatrimonio.setNome(patrimonio.getNome());
+            atualizaPatrimonio.setDescricao(patrimonio.getDescricao());
+            atualizaPatrimonio.setDataAquisicao(patrimonio.getDataAquisicao());
+            atualizaPatrimonio.setDataCadastro(patrimonio.getDataCadastro());
+            atualizaPatrimonio.setNumeroSerie(patrimonio.getNumeroSerie());
+            atualizaPatrimonio.setValor(patrimonio.getValor());
+            atualizaPatrimonio.setPatrimonioStatus(patrimonio.getPatrimonioStatus());
+            return patrimonioRepository.save(atualizaPatrimonio);
         }).orElseThrow(() -> new RuntimeException("Patrimônio não encontrado"));
     }
 

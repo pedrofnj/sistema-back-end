@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/patrimonio")
 @CrossOrigin(origins = "*")
@@ -23,11 +21,6 @@ public class PatrimonioController {
     @RequestMapping("/salvar")
     public void salvar(@RequestBody Patrimonio patrimonio) {
         patrimonioService.salvar(patrimonio);
-    }
-
-    @RequestMapping("/all")
-    public ResponseEntity<List<Patrimonio>> byAll() {
-        return patrimonioService.byAll();
     }
 
     @RequestMapping("/byId/{id}")

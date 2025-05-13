@@ -1,14 +1,11 @@
 package com.igrejasobrenatural.sistemas.model;
 
-import com.igrejasobrenatural.sistemas.enums.SetorEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -31,8 +28,4 @@ public class Responsavel {
     @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "setor", joinColumns = @JoinColumn(name = "usuario_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<SetorEnum> setor = new HashSet<>();
 }

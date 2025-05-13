@@ -1,14 +1,11 @@
 package com.igrejasobrenatural.sistemas.model;
 
-import com.igrejasobrenatural.sistemas.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -28,8 +25,8 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<RoleEnum> roles = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_role", nullable = false)
+    private RoleUsuario roleUsuario;
+
 }
