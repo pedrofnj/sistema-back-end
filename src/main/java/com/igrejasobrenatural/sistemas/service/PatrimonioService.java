@@ -1,12 +1,16 @@
 package com.igrejasobrenatural.sistemas.service;
 
 import com.igrejasobrenatural.sistemas.model.Patrimonio;
+import com.igrejasobrenatural.sistemas.model.PatrimonioSetor;
 import com.igrejasobrenatural.sistemas.model.PatrimonioStatus;
 import com.igrejasobrenatural.sistemas.repository.PatrimonioRepository;
+import com.igrejasobrenatural.sistemas.repository.PatrimonioSetorRepository;
 import com.igrejasobrenatural.sistemas.repository.PatrimonioStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PatrimonioService {
@@ -15,10 +19,13 @@ public class PatrimonioService {
 
     final private PatrimonioStatusRepository patrimonioStatusRepository;
 
+    final private PatrimonioSetorRepository patrimonioSetorRepository;
+
     @Autowired
-    public PatrimonioService(PatrimonioRepository patrimonioRepository, PatrimonioStatusRepository patrimonioStatusRepository) {
+    public PatrimonioService(PatrimonioRepository patrimonioRepository, PatrimonioStatusRepository patrimonioStatusRepository, PatrimonioSetorRepository patrimonioSetorRepository) {
         this.patrimonioRepository = patrimonioRepository;
         this.patrimonioStatusRepository = patrimonioStatusRepository;
+        this.patrimonioSetorRepository = patrimonioSetorRepository;
     }
 
     public void salvar(Patrimonio patrimonio) {
@@ -30,9 +37,23 @@ public class PatrimonioService {
         PatrimonioStatus status = patrimonioStatusRepository.findById(idStatus)
                 .orElseThrow(() -> new RuntimeException("Status de patrimônio não encontrado"));
 
+        Long idSetor = patrimonio.getIdSetor();
+        PatrimonioSetor setor = patrimonioSetorRepository.findById(idSetor)
+                .orElseThrow(() -> new RuntimeException("Setor não encontrado"));
+        patrimonio.setSetores(setor);
+
+
         patrimonio.setPatrimonioStatus(status);
 
         patrimonioRepository.save(patrimonio);
+    }
+
+    public ResponseEntity<List<Patrimonio>> findAll() {
+        return ResponseEntity.ok(patrimonioRepository.findAll());
+    }
+
+    public ResponseEntity<List<PatrimonioSetor>> findAllSetores() {
+        return ResponseEntity.ok(patrimonioSetorRepository.findAll());
     }
 
     public ResponseEntity<Patrimonio> byId(Long id) {
@@ -49,6 +70,8 @@ public class PatrimonioService {
             atualizaPatrimonio.setNumeroSerie(patrimonio.getNumeroSerie());
             atualizaPatrimonio.setValor(patrimonio.getValor());
             atualizaPatrimonio.setPatrimonioStatus(patrimonio.getPatrimonioStatus());
+            atualizaPatrimonio.setSetores(patrimonio.getSetores());
+            atualizaPatrimonio.setResponsavel(patrimonio.getResponsavel());
             return patrimonioRepository.save(atualizaPatrimonio);
         }).orElseThrow(() -> new RuntimeException("Patrimônio não encontrado"));
     }

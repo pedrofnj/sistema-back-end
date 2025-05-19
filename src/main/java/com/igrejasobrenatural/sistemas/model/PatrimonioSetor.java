@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class PatrimonioSetor {
 
     @Id
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "nome")

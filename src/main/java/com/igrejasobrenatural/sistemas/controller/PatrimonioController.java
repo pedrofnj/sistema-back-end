@@ -1,10 +1,13 @@
 package com.igrejasobrenatural.sistemas.controller;
 
 import com.igrejasobrenatural.sistemas.model.Patrimonio;
+import com.igrejasobrenatural.sistemas.model.PatrimonioSetor;
 import com.igrejasobrenatural.sistemas.service.PatrimonioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/patrimonio")
@@ -23,6 +26,11 @@ public class PatrimonioController {
         patrimonioService.salvar(patrimonio);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Patrimonio>> findAll() {
+        return patrimonioService.findAll();
+    }
+
     @RequestMapping("/byId/{id}")
     public ResponseEntity<Patrimonio> byId(@PathVariable("id") Long id) {
         return patrimonioService.byId(id);
@@ -31,6 +39,11 @@ public class PatrimonioController {
     @PostMapping("/alterar/{id}")
     public void alterar(@PathVariable("id") Long id, @RequestBody Patrimonio patrimonio) {
         patrimonioService.alterar(id, patrimonio);
+    }
+
+    @GetMapping("/setores")
+    public ResponseEntity<List<PatrimonioSetor>> findAllSetores() {
+        return patrimonioService.findAllSetores();
     }
 
 }
