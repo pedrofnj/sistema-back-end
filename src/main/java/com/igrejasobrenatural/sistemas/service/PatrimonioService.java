@@ -33,16 +33,16 @@ public class PatrimonioService {
             throw new RuntimeException("Patrimônio já existe");
         }
 
-        Long idStatus = patrimonio.getPatrimonioStatus().getId();
+        Long idStatus = patrimonio.getIdStatus();
         PatrimonioStatus status = patrimonioStatusRepository.findById(idStatus)
                 .orElseThrow(() -> new RuntimeException("Status de patrimônio não encontrado"));
 
         Long idSetor = patrimonio.getIdSetor();
         PatrimonioSetor setor = patrimonioSetorRepository.findById(idSetor)
                 .orElseThrow(() -> new RuntimeException("Setor não encontrado"));
+
+       patrimonio.setLocalizacao("Sala de T.I");
         patrimonio.setSetores(setor);
-
-
         patrimonio.setPatrimonioStatus(status);
 
         patrimonioRepository.save(patrimonio);
@@ -54,6 +54,10 @@ public class PatrimonioService {
 
     public ResponseEntity<List<PatrimonioSetor>> findAllSetores() {
         return ResponseEntity.ok(patrimonioSetorRepository.findAll());
+    }
+
+    public ResponseEntity<List<PatrimonioStatus>> findAllStatus() {
+        return ResponseEntity.ok(patrimonioStatusRepository.findAll());
     }
 
     public ResponseEntity<Patrimonio> byId(Long id) {

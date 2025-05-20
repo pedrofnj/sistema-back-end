@@ -2,6 +2,7 @@ package com.igrejasobrenatural.sistemas.controller;
 
 import com.igrejasobrenatural.sistemas.model.Patrimonio;
 import com.igrejasobrenatural.sistemas.model.PatrimonioSetor;
+import com.igrejasobrenatural.sistemas.model.PatrimonioStatus;
 import com.igrejasobrenatural.sistemas.service.PatrimonioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,11 @@ public class PatrimonioController {
     @GetMapping("/setores")
     public ResponseEntity<List<PatrimonioSetor>> findAllSetores() {
         return patrimonioService.findAllSetores();
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<PatrimonioStatus>> findAllStatus() {
+        return patrimonioService.findAllStatus();
     }
 
 }
