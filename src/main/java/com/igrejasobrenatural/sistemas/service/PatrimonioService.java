@@ -64,6 +64,10 @@ public class PatrimonioService {
         return ResponseEntity.ok(patrimonioRepository.findById(id).orElseThrow(() -> new RuntimeException("Patrimônio não encontrado")));
     }
 
+    public ResponseEntity<Patrimonio> byCodigo(Long codigo) {
+        return ResponseEntity.ok(patrimonioRepository.findByCodigo(codigo).orElseThrow(() -> new RuntimeException("Patrimônio não encontrado")));
+    }
+
     public void alterar(Long id, Patrimonio patrimonio){
         patrimonioRepository.findById(id).map(atualizaPatrimonio -> {
             atualizaPatrimonio.setCodigo(patrimonio.getCodigo());

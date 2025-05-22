@@ -37,6 +37,11 @@ public class PatrimonioController {
         return patrimonioService.byId(id);
     }
 
+    @GetMapping("/byCodigo/{codigo}")
+    public ResponseEntity<Patrimonio> byCodigo(@PathVariable("codigo") Long codigo) {
+        return patrimonioService.byCodigo(codigo);
+    }
+
     @PostMapping("/alterar/{id}")
     public void alterar(@PathVariable("id") Long id, @RequestBody Patrimonio patrimonio) {
         patrimonioService.alterar(id, patrimonio);
