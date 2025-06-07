@@ -23,8 +23,9 @@ public class PatrimonioController {
     }
 
     @RequestMapping("/salvar")
-    public void salvar(@RequestBody Patrimonio patrimonio) {
-        patrimonioService.salvar(patrimonio);
+    public ResponseEntity<Patrimonio> salvar(@RequestBody Patrimonio patrimonio) {
+        Patrimonio salvo = patrimonioService.salvar(patrimonio);
+        return ResponseEntity.ok(salvo);
     }
 
     @GetMapping("/all")

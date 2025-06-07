@@ -28,9 +28,19 @@ public class PatrimonioService {
         this.patrimonioSetorRepository = patrimonioSetorRepository;
     }
 
-    public void salvar(Patrimonio patrimonio) {
-        if (patrimonioRepository.findByCodigo(patrimonio.getCodigo()).isPresent()) {
-            throw new RuntimeException("Patrimônio já existe");
+    public Patrimonio salvar(Patrimonio patrimonio) {
+        // Cadastro novo
+        if (patrimonio.getId() == null) {
+            if (patrimonioRepository.findByCodigo(patrimonio.getCodigo()).isPresent()) {
+                throw new RuntimeException("Já existe um patrimônio com este código.");
+            }
+        } else {
+            // Edição: impede duplicidade de código em outro registro
+            patrimonioRepository.findByCodigo(patrimonio.getCodigo()).ifPresent(existing -> {
+                if (!existing.getId().equals(patrimonio.getId())) {
+                    throw new RuntimeException("Já existe outro patrimônio com este código.");
+                }
+            });
         }
 
         Long idStatus = patrimonio.getIdStatus();
@@ -41,11 +51,10 @@ public class PatrimonioService {
         PatrimonioSetor setor = patrimonioSetorRepository.findById(idSetor)
                 .orElseThrow(() -> new RuntimeException("Setor não encontrado"));
 
-       patrimonio.setLocalizacao("Sala de T.I");
         patrimonio.setSetores(setor);
         patrimonio.setPatrimonioStatus(status);
 
-        patrimonioRepository.save(patrimonio);
+        return patrimonioRepository.save(patrimonio);
     }
 
     public ResponseEntity<List<Patrimonio>> findAll() {
@@ -68,7 +77,7 @@ public class PatrimonioService {
         return ResponseEntity.ok(patrimonioRepository.findByCodigo(codigo).orElseThrow(() -> new RuntimeException("Patrimônio não encontrado")));
     }
 
-    public void alterar(Long id, Patrimonio patrimonio){
+    public void alterar(Long id, Patrimonio patrimonio) {
         patrimonioRepository.findById(id).map(atualizaPatrimonio -> {
             atualizaPatrimonio.setCodigo(patrimonio.getCodigo());
             atualizaPatrimonio.setNome(patrimonio.getNome());

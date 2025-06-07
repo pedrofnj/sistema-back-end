@@ -28,6 +28,9 @@ public class Patrimonio {
     @Column(name = "descricao")
     private String descricao;
 
+    @Column(name = "modelo")
+    private String modelo;
+
     @Column(name = "data_aquisicao")
     private LocalDate dataAquisicao;
 
